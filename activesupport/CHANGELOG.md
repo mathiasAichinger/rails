@@ -1,3 +1,28 @@
+## Rails 5.2.1 (August 07, 2018) ##
+
+*   Redis cache store: `delete_matched` no longer blocks the Redis server.
+    (Switches from evaled Lua to a batched SCAN + DEL loop.)
+
+    *Gleb Mazovetskiy*
+
+*   Fix bug where `ActiveSupport::Timezone.all` would fail when tzinfo data for
+    any timezone defined in `ActiveSupport::TimeZone::MAPPING` is missing.
+
+    *Dominik Sander*
+
+*   Fix bug where `ActiveSupport::Cache` will massively inflate the storage
+    size when compression is enabled (which is true by default). This patch
+    does not attempt to repair existing data: please manually flush the cache
+    to clear out the problematic entries.
+
+    *Godfrey Chan*
+
+*   Fix `ActiveSupport::Cache#read_multi` bug with local cache enabled that was
+    returning instances of `ActiveSupport::Cache::Entry` instead of the raw values.
+
+    *Jason Lee*
+
+
 ## Rails 5.2.0 (April 09, 2018) ##
 
 *   Caching: MemCache and Redis `read_multi` and `fetch_multi` speedup.

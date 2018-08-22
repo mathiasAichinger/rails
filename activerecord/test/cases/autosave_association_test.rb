@@ -27,6 +27,8 @@ require "models/member_detail"
 require "models/organization"
 require "models/guitar"
 require "models/tuning_peg"
+require "models/topic"
+require "models/reply"
 
 class TestAutosaveAssociationsInGeneral < ActiveRecord::TestCase
   def test_autosave_validation
@@ -517,6 +519,18 @@ class TestDefaultAutosaveAssociationOnAHasManyAssociation < ActiveRecord::TestCa
     assert_not_predicate new_firm, :persisted?
   end
 
+  def test_adding_unsavable_association
+    new_firm = Firm.new("name" => "A New Firm, Inc")
+    client = new_firm.clients.new("name" => "Apple")
+    client.throw_on_save = true
+
+    assert_predicate client, :valid?
+    assert_predicate new_firm, :valid?
+    assert_not new_firm.save
+    assert_not_predicate new_firm, :persisted?
+    assert_not_predicate client, :persisted?
+  end
+
   def test_invalid_adding_with_validate_false
     firm = Firm.first
     client = Client.new
@@ -543,6 +557,22 @@ class TestDefaultAutosaveAssociationOnAHasManyAssociation < ActiveRecord::TestCa
     assert firm.save
     assert_predicate client, :persisted?
     assert_equal no_of_clients + 1, Client.count
+  end
+
+  def test_parent_should_not_get_saved_with_duplicate_children_records
+    Topic.delete_all
+
+    content = "Best content"
+    reply1 = ValidateUniqueContentReply.new(content: content)
+    reply2 = ValidateUniqueContentReply.new(content: content)
+
+    topic = Topic.new(validate_unique_content_replies: [reply1, reply2])
+
+    assert_not topic.save
+    assert topic.errors.any?
+
+    assert_equal 0, Topic.count
+    assert_equal 0, ValidateUniqueContentReply.count
   end
 
   def test_invalid_build

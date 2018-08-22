@@ -1,3 +1,68 @@
+## Rails 5.2.1 (August 07, 2018) ##
+
+*   PostgreSQL: Support new relkind for partitioned tables.
+
+    Fixes #33008.
+
+    *Yannick Schutz*
+
+*   Rollback parent transaction when children fails to update.
+
+    *Guillaume Malette*
+
+*   Fix default value for MySQL time types with specified precision.
+
+    *Nikolay Kondratyev*
+
+*   Fix `touch` option to behave consistently with `Persistence#touch` method.
+
+    *Ryuta Kamizono*
+
+*   Fix `save` in `after_create_commit` won't invoke extra `after_create_commit`.
+
+    Fixes #32831.
+
+    *Ryuta Kamizono*
+
+*   Fix logic on disabling commit callbacks so they are not called unexpectedly when errors occur.
+
+    *Brian Durand*
+
+*   Fix parent record should not get saved with duplicate children records.
+
+    Fixes #32940.
+
+    *Santosh Wadghule*
+
+*   Fix that association's after_touch is not called with counter cache.
+
+    Fixes #31559.
+
+    *Ryuta Kamizono*
+
+*   `becomes` should clear the mutation tracker which is created in `after_initialize`.
+
+    Fixes #32867.
+
+    *Ryuta Kamizono*
+
+*   Allow a belonging to parent object to be created from a new record.
+
+    *Jolyon Pawlyn*
+
+*   Fix that building record with assigning multiple has_one associations
+    wrongly persists through record.
+
+    Fixes #32511.
+
+    *Sam DeCesare*
+
+*   Fix relation merging when one of the relations is going to skip the
+    query cache.
+
+    *James Williams*
+
+
 ## Rails 5.2.0 (April 09, 2018) ##
 
 *   MySQL: Support mysql2 0.5.x.

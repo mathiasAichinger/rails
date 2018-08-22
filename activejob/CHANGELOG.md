@@ -1,3 +1,11 @@
+## Rails 5.2.1 (August 07, 2018) ##
+
+*   Pass the error instance as the second parameter of block executed by `discard_on`.
+
+    Fixes #32853.
+
+    *Yuji Yaginuma*
+
 ## Rails 5.2.0 (April 09, 2018) ##
 
 *   Allow block to be passed to `ActiveJob::Base.discard_on` to allow custom handling of discard jobs.

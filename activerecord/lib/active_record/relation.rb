@@ -277,10 +277,10 @@ module ActiveRecord
     # Please check unscoped if you want to remove all previous scopes (including
     # the default_scope) during the execution of a block.
     def scoping
-      previous, klass.current_scope = klass.current_scope(true), self
+      previous, klass.current_scope = klass.current_scope(true), self unless @delegate_to_klass
       yield
     ensure
-      klass.current_scope = previous
+      klass.current_scope = previous unless @delegate_to_klass
     end
 
     def _exec_scope(*args, &block) # :nodoc:
@@ -436,17 +436,16 @@ module ActiveRecord
     #   # => SELECT "users".* FROM "users"  WHERE "users"."name" = 'Oscar'
     def to_sql
       @to_sql ||= begin
-                    relation = self
-
-                    if eager_loading?
-                      apply_join_dependency { |rel, _| relation = rel }
-                    end
-
-                    conn = klass.connection
-                    conn.unprepared_statement {
-                      conn.to_sql(relation.arel)
-                    }
-                  end
+        if eager_loading?
+          apply_join_dependency do |relation, join_dependency|
+            relation = join_dependency.apply_column_aliases(relation)
+            relation.to_sql
+          end
+        else
+          conn = klass.connection
+          conn.unprepared_statement { conn.to_sql(arel) }
+        end
+      end
     end
 
     # Returns a hash of where conditions.
@@ -546,6 +545,7 @@ module ActiveRecord
                 if ActiveRecord::NullRelation === relation
                   []
                 else
+                  relation = join_dependency.apply_column_aliases(relation)
                   rows = connection.select_all(relation.arel, "SQL")
                   join_dependency.instantiate(rows, &block)
                 end.freeze

@@ -973,16 +973,16 @@ The `get` method kicks off the web request and populates the results into the `@
 
 All of these keyword arguments are optional.
 
-Example: Calling the `:show` action, passing an `id` of 12 as the `params` and setting `HTTP_REFERER` header:
+Example: Calling the `:show` action for the first `Article`, passing in an `HTTP_REFERER` header:
 
 ```ruby
-get article_url, params: { id: 12 }, headers: { "HTTP_REFERER" => "http://example.com/home" }
+get article_url(Article.first), headers: { "HTTP_REFERER" => "http://example.com/home" }
 ```
 
-Another example: Calling the `:update` action, passing an `id` of 12 as the `params` as an Ajax request.
+Another example: Calling the `:update` action for the last `Article`, passing in new text for the `title` in `params`, as an Ajax request:
 
 ```ruby
-patch article_url, params: { id: 12 }, xhr: true
+patch article_url(Article.last), params: { article: { title: "updated" } }, xhr: true
 ```
 
 NOTE: If you try running `test_should_create_article` test from `articles_controller_test.rb` it will fail on account of the newly added model level validation and rightly so.
@@ -1373,7 +1373,7 @@ located under the `test/helpers` directory.
 Given we have the following helper:
 
 ```ruby
-module UserHelper
+module UsersHelper
   def link_to_user(user)
     link_to "#{user.first_name} #{user.last_name}", user
   end
@@ -1383,7 +1383,7 @@ end
 We can test the output of this method like this:
 
 ```ruby
-class UserHelperTest < ActionView::TestCase
+class UsersHelperTest < ActionView::TestCase
   test "should return the user's full name" do
     user = users(:david)
 
@@ -1489,7 +1489,7 @@ Functional testing for mailers involves more than just checking that the email b
 ```ruby
 require 'test_helper'
 
-class UserControllerTest < ActionDispatch::IntegrationTest
+class UsersControllerTest < ActionDispatch::IntegrationTest
   test "invite friend" do
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       post invite_friend_url, params: { email: 'friend@example.com' }

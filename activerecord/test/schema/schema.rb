@@ -33,6 +33,7 @@ ActiveRecord::Schema.define do
   create_table :aircraft, force: true do |t|
     t.string :name
     t.integer :wheels_count, default: 0, null: false
+    t.datetime :wheels_owned_at
   end
 
   create_table :articles, force: true do |t|
@@ -123,7 +124,8 @@ ActiveRecord::Schema.define do
   create_table :cars, force: true do |t|
     t.string  :name
     t.integer :engines_count
-    t.integer :wheels_count, default: 0
+    t.integer :wheels_count, default: 0, null: false
+    t.datetime :wheels_owned_at
     t.column :lock_version, :integer, null: false, default: 0
     t.timestamps null: false
   end
@@ -484,7 +486,8 @@ ActiveRecord::Schema.define do
 
   create_table :members, force: true do |t|
     t.string :name
-    t.integer :member_type_id
+    t.references :member_type, index: false
+    t.references :admittable, polymorphic: true, index: false
   end
 
   create_table :member_details, force: true do |t|

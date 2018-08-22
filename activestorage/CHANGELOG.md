@@ -1,3 +1,14 @@
+## Rails 5.2.1 (August 07, 2018) ##
+
+*   Fix direct upload with zero-byte files.
+
+    *George Claghorn*
+
+*   Exclude JSON root from `active_storage/direct_uploads#create` response.
+
+    *Javan Makhmali*
+
+
 ## Rails 5.2.0 (April 09, 2018) ##
 
 *   Allow full use of the AWS S3 SDK options for authentication. If an

@@ -1,3 +1,58 @@
+## Rails 5.2.1 (August 07, 2018) ##
+
+*   Prevent `?null=` being passed on JSON encoded test requests.
+
+    `RequestEncoder#encode_params` won't attempt to parse params if
+    there are none.
+
+    So call like this will no longer append a `?null=` query param.
+
+        get foos_url, as: :json
+
+    *Alireza Bashiri*
+
+*   Ensure `ActionController::Parameters#transform_values` and
+    `ActionController::Parameters#transform_values!` converts hashes into
+    parameters.
+
+    *Kevin Sjöberg*
+
+*   Fix strong parameters `permit!` with nested arrays.
+
+    Given:
+    ```
+    params = ActionController::Parameters.new(nested_arrays: [[{ x: 2, y: 3 }, { x: 21, y: 42 }]])
+    params.permit!
+    ```
+
+    `params[:nested_arrays][0][0].permitted?` will now return `true` instead of `false`.
+
+    *Steve Hull*
+
+*   Reset `RAW_POST_DATA` and `CONTENT_LENGTH` request environment between test requests in
+    `ActionController::TestCase` subclasses.
+
+    *Eugene Kenny*
+
+*   Output only one Content-Security-Policy nonce header value per request.
+
+    Fixes #32597.
+
+    *Andrey Novikov*, *Andrew White*
+
+*   Only disable GPUs for headless Chrome on Windows.
+
+    It is not necessary anymore for Linux and macOS machines.
+
+    https://bugs.chromium.org/p/chromium/issues/detail?id=737678#c1
+
+    *Stefan Wrobel*
+
+*   Fix system tests transactions not closed between examples.
+
+    *Sergey Tarasov*
+
+
 ## Rails 5.2.0 (April 09, 2018) ##
 
 *   Check exclude before flagging cookies as secure.
