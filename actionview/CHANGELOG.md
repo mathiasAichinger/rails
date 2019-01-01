@@ -1,3 +1,13 @@
+## Rails 5.2.2 (December 04, 2018) ##
+
+*   No changes.
+
+
+## Rails 5.2.1.1 (November 27, 2018) ##
+
+*   No changes.
+
+
 ## Rails 5.2.1 (August 07, 2018) ##
 
 *   Fix leak of `skip_default_ids` and `allow_method_names_outside_object` options

@@ -124,7 +124,7 @@ module ActiveRecord
 
               # add info on sort order (only desc order is explicitly specified, asc is the default)
               # and non-default opclasses
-              expressions.scan(/(?<column>\w+)\s?(?<opclass>\w+_ops)?\s?(?<desc>DESC)?\s?(?<nulls>NULLS (?:FIRST|LAST))?/).each do |column, opclass, desc, nulls|
+              expressions.scan(/(?<column>\w+)"?\s?(?<opclass>\w+_ops)?\s?(?<desc>DESC)?\s?(?<nulls>NULLS (?:FIRST|LAST))?/).each do |column, opclass, desc, nulls|
                 opclasses[column] = opclass.to_sym if opclass
                 if nulls
                   orders[column] = [desc, nulls].compact.join(" ")
@@ -700,6 +700,11 @@ module ActiveRecord
             sql
           end
 
+          def add_column_for_alter(table_name, column_name, type, options = {})
+            return super unless options.key?(:comment)
+            [super, Proc.new { change_column_comment(table_name, column_name, options[:comment]) }]
+          end
+
           def change_column_for_alter(table_name, column_name, type, options = {})
             sqls = [change_column_sql(table_name, column_name, type, options)]
             sqls << change_column_default_for_alter(table_name, column_name, options[:default]) if options.key?(:default)
@@ -707,7 +712,6 @@ module ActiveRecord
             sqls << Proc.new { change_column_comment(table_name, column_name, options[:comment]) } if options.key?(:comment)
             sqls
           end
-
 
           # Changes the default value of a table column.
           def change_column_default_for_alter(table_name, column_name, default_or_changes) # :nodoc:
