@@ -1,3 +1,23 @@
+## Rails 5.2.4.1 (December 18, 2019) ##
+
+*   No changes.
+
+
+## Rails 5.2.4 (November 27, 2019) ##
+
+*   No changes.
+
+
+## Rails 5.2.3 (March 27, 2019) ##
+
+*   No changes.
+
+
+## Rails 5.2.2.1 (March 11, 2019) ##
+
+*   No changes.
+
+
 ## Rails 5.2.2 (December 04, 2018) ##
 
 *   Support multiple submit buttons in Active Storage forms.

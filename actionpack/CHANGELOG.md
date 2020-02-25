@@ -1,3 +1,40 @@
+## Rails 5.2.4.1 (December 18, 2019) ##
+
+*   Fix possible information leak / session hijacking vulnerability.
+
+    The `ActionDispatch::Session::MemcacheStore` is still vulnerable given it requires the
+    gem dalli to be updated as well.
+
+    CVE-2019-16782.
+
+
+## Rails 5.2.4 (November 27, 2019) ##
+
+*   No changes.
+
+
+## Rails 5.2.3 (March 27, 2019) ##
+
+*   Allow using `public` and `no-cache` together in the the Cache Control header.
+
+    Before this change, even if `public` was specified in the Cache Control header,
+    it was excluded when `no-cache` was included. This change preserves the
+    `public` value as is.
+
+    Fixes #34780.
+
+    *Yuji Yaginuma*
+
+*   Allow `nil` params for `ActionController::TestCase`.
+
+    *Ryo Nakamura*
+
+
+## Rails 5.2.2.1 (March 11, 2019) ##
+
+*   No changes.
+
+
 ## Rails 5.2.2 (December 04, 2018) ##
 
 *   Reset Capybara sessions if failed system test screenshot raising an exception.
@@ -163,6 +200,34 @@
     *Andrew White*
 
 *   Matches behavior of `Hash#each` in `ActionController::Parameters#each`.
+
+    Rails 5.0 introduced a bug when looping through controller params using `each`. Only the keys of params hash were passed to the block, e.g.
+
+        # Parameters: {"param"=>"1", "param_two"=>"2"}
+        def index
+          params.each do |name|
+            puts name
+          end
+        end
+
+        # Prints
+        # param
+        # param_two
+
+    In Rails 5.2 the bug has been fixed and name will be an array (which was the behavior for all versions prior to 5.0), instead of a string.
+
+    To fix the code above simply change as per example below:
+
+        # Parameters: {"param"=>"1", "param_two"=>"2"}
+        def index
+          params.each do |name, value|
+            puts name
+          end
+        end
+
+        # Prints
+        # param
+        # param_two
 
     *Dominic Cleal*
 
